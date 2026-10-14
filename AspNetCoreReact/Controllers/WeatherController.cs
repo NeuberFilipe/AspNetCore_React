@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using AspNetCoreReact.ViewModel;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 
 namespace AspNetCoreReact.Controllers
@@ -20,7 +21,14 @@ namespace AspNetCoreReact.Controllers
         }
 
         private string _Url = "http://api.openweathermap.org";
-        private string _ApiKEY = "2bac87e0cb16557bff7d4ebcbaa89d2f";
+        private readonly string _ApiKEY;
+
+        // Chave lida de configuracao: appsettings "OpenWeatherMap:ApiKey" ou
+        // variavel de ambiente OpenWeatherMap__ApiKey. Sem valor padrao no codigo.
+        public WeatherController(IConfiguration configuration)
+        {
+            _ApiKEY = configuration["OpenWeatherMap:ApiKey"] ?? string.Empty;
+        }
 
         [HttpGet("[action]")]
         public async Task<WeatherModel.RootObject> City(string city)
